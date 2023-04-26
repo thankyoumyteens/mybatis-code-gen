@@ -59,7 +59,7 @@
         </jdbcConnection>
 
         <!-- 类型转换 使用自定义实现 -->
-        <javaTypeResolver type="org.zsz.mybatiscodegen.NumberToIntJavaTypeResolver">
+        <javaTypeResolver type="org.zsz.mybatiscodegen.config.NumberToIntJavaTypeResolver">
             <!--是否使用bigDecimal，默认false。
                 false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer
                 true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal-->

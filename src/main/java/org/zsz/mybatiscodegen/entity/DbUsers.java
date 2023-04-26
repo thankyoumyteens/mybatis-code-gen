@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Users {
+public class DbUsers {
 
     private Integer usersId;
     private String usersUrl;
@@ -24,4 +24,5 @@ public class Users {
     private String usersPwd;
     private String usersDb;
     private String usersDriver;
+    private Integer dbType;
 }
