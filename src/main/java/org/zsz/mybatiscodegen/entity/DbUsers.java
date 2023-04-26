@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
  * @description
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class DbUsers {
 
     private Integer usersId;

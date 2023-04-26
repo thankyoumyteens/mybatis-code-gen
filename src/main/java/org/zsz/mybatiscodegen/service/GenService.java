@@ -6,6 +6,7 @@ import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.internal.DefaultShellCallback;
 import org.zsz.mybatiscodegen.constant.DbType;
 import org.zsz.mybatiscodegen.entity.DbUsers;
+import org.zsz.mybatiscodegen.entity.GeneratorProperty;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class GenService {
 
-    private Context context;
+    private final Context context;
 
     /**
      * 初始化
@@ -32,11 +33,6 @@ public class GenService {
         context.setId("genServiceContext");
         context.addProperty("javaFileEncoding", "utf-8");
         context.setTargetRuntime(isXmlMode ? "MyBatis3" : "MyBatis3DynamicSql");
-        // 创建Java类时对注释进行控制
-        CommentGeneratorConfiguration commentGeneratorConfiguration = new CommentGeneratorConfiguration();
-        // 不生成注释
-        commentGeneratorConfiguration.addProperty("suppressAllComments", "true");
-        context.setCommentGeneratorConfiguration(commentGeneratorConfiguration);
     }
 
     /**
@@ -44,7 +40,7 @@ public class GenService {
      *
      * @param users jdbc连接信息
      */
-    public GenService setConnection(DbUsers users) {
+    public GenService setConnection(DbUsers users, GeneratorProperty... properties) {
         JDBCConnectionConfiguration config = new JDBCConnectionConfiguration();
         String connectionURL = switch (users.getDbType()) {
             case DbType.ORACLE ->
@@ -59,7 +55,56 @@ public class GenService {
         config.setPassword(users.getUsersPwd());
         config.setUserId(users.getUsersUid());
         config.setDriverClass(users.getUsersDriver());
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
         context.setJdbcConnectionConfiguration(config);
+        return this;
+    }
+
+    /**
+     * 添加插件
+     *
+     * @param fullName 插件全类名
+     */
+    public GenService addPlugin(String fullName, GeneratorProperty... properties) {
+        PluginConfiguration config = new PluginConfiguration();
+        config.setConfigurationType(fullName);
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
+        context.addPluginConfiguration(config);
+        return this;
+    }
+
+    /**
+     * 不生成注释
+     */
+    public GenService noComment() {
+        CommentGeneratorConfiguration config = new CommentGeneratorConfiguration();
+        config.addProperty("suppressAllComments", "true");
+        context.setCommentGeneratorConfiguration(config);
+        return this;
+    }
+
+    /**
+     * 注释
+     *
+     * @param fullName 自定义注释生成类全类名
+     */
+    public GenService setComment(String fullName, GeneratorProperty... properties) {
+        CommentGeneratorConfiguration config = new CommentGeneratorConfiguration();
+        config.setConfigurationType(fullName);
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
+        context.setCommentGeneratorConfiguration(config);
         return this;
     }
 
@@ -75,12 +120,17 @@ public class GenService {
      *
      * @param fullName TypeResolver全类名
      */
-    public GenService setTypeResolver(String fullName) {
+    public GenService setTypeResolver(String fullName, GeneratorProperty... properties) {
         JavaTypeResolverConfiguration config = new JavaTypeResolverConfiguration();
         if (fullName != null) {
             config.setConfigurationType(fullName);
         }
         config.addProperty("forceBigDecimals", "true");
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
         context.setJavaTypeResolverConfiguration(config);
         return this;
     }
@@ -91,11 +141,16 @@ public class GenService {
      * @param targetPackage 包名
      * @param targetProject 文件路径
      */
-    public GenService setEntityConfig(String targetPackage, String targetProject) {
+    public GenService setEntityConfig(String targetPackage, String targetProject, GeneratorProperty... properties) {
         JavaModelGeneratorConfiguration config = new JavaModelGeneratorConfiguration();
         config.setTargetPackage(targetPackage);
         config.setTargetProject(targetProject);
         config.addProperty("trimStrings", "true");
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
         context.setJavaModelGeneratorConfiguration(config);
         return this;
     }
@@ -106,13 +161,18 @@ public class GenService {
      * @param targetPackage 包名
      * @param targetProject 文件路径
      */
-    public GenService setDaoConfig(String targetPackage, String targetProject) {
-        JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
-        javaClientGeneratorConfiguration.setTargetPackage(targetPackage);
-        javaClientGeneratorConfiguration.setTargetProject(targetProject);
+    public GenService setDaoConfig(String targetPackage, String targetProject, GeneratorProperty... properties) {
+        JavaClientGeneratorConfiguration config = new JavaClientGeneratorConfiguration();
+        config.setTargetPackage(targetPackage);
+        config.setTargetProject(targetProject);
         boolean isXmlMode = "MyBatis3".equals(context.getTargetRuntime());
-        javaClientGeneratorConfiguration.setConfigurationType(isXmlMode ? "XMLMAPPER" : "ANNOTATEDMAPPER");
-        context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
+        config.setConfigurationType(isXmlMode ? "XMLMAPPER" : "ANNOTATEDMAPPER");
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
+        context.setJavaClientGeneratorConfiguration(config);
         return this;
     }
 
@@ -122,10 +182,15 @@ public class GenService {
      * @param targetPackage 包名
      * @param targetProject 文件路径
      */
-    public GenService setMapperConfig(String targetPackage, String targetProject) {
+    public GenService setMapperConfig(String targetPackage, String targetProject, GeneratorProperty... properties) {
         SqlMapGeneratorConfiguration config = new SqlMapGeneratorConfiguration();
         config.setTargetPackage(targetPackage);
         config.setTargetProject(targetProject);
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
         context.setSqlMapGeneratorConfiguration(config);
         return this;
     }
@@ -142,25 +207,30 @@ public class GenService {
     /**
      * 添加表
      *
-     * @param dbName 数据库
+     * @param dbName     数据库
      * @param tableName  表名
      * @param entityName 实体类名
      */
-    public GenService addTable(String dbName, String tableName, String entityName) {
-        TableConfiguration tc = new TableConfiguration(context);
+    public GenService addTable(String dbName, String tableName, String entityName, GeneratorProperty... properties) {
+        TableConfiguration config = new TableConfiguration(context);
         if (dbName != null) {
-            tc.setSchema(dbName);
+            config.setSchema(dbName);
         }
-        tc.setTableName(tableName);
+        config.setTableName(tableName);
         if (entityName != null) {
-            tc.setDomainObjectName(entityName);
+            config.setDomainObjectName(entityName);
         }
-        tc.setCountByExampleStatementEnabled(false);
-        tc.setDeleteByExampleStatementEnabled(false);
-        tc.setSelectByExampleStatementEnabled(false);
-        tc.setUpdateByExampleStatementEnabled(false);
-        tc.setSelectByExampleQueryId("false");
-        context.addTableConfiguration(tc);
+        config.setCountByExampleStatementEnabled(false);
+        config.setDeleteByExampleStatementEnabled(false);
+        config.setSelectByExampleStatementEnabled(false);
+        config.setUpdateByExampleStatementEnabled(false);
+        config.setSelectByExampleQueryId("false");
+        if (properties != null) {
+            for (GeneratorProperty property : properties) {
+                config.addProperty(property.getName(), property.getValue());
+            }
+        }
+        context.addTableConfiguration(config);
         return this;
     }
 

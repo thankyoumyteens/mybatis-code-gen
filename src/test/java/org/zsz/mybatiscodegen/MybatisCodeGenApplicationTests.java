@@ -33,7 +33,9 @@ class MybatisCodeGenApplicationTests {
         String xmlPath = "src/main/resources";
         new GenService(true)
                 .setConnection(users)
+                .addPlugin("org.zsz.mybatiscodegen.plugin.LombokPlugin")
                 .setTypeResolver()
+                .noComment()
                 .setEntityConfig("org.zsz.gen.entity", javaPath)
                 .setDaoConfig("org.zsz.gen.dao", javaPath)
                 .setMapperConfig("mapper", xmlPath)
