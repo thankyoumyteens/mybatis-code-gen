@@ -11,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.zsz.mybatiscodegen.entity.DbUsers;
+import org.zsz.mybatiscodegen.entity.GeneratorProperty;
 import org.zsz.mybatiscodegen.service.GenService;
 
 import java.util.ArrayList;
@@ -31,11 +32,15 @@ class MybatisCodeGenApplicationTests {
         System.out.println(users);
         String javaPath = "src/main/java";
         String xmlPath = "src/main/resources";
+        GeneratorProperty[] commentProperties = {
+                new GeneratorProperty("author", "test"),
+                new GeneratorProperty("dateFormat", "yyyy/MM/dd HH:mm")
+        };
         new GenService(true)
                 .setConnection(users)
                 .addPlugin("org.zsz.mybatiscodegen.plugin.LombokPlugin")
                 .setTypeResolver()
-                .noComment()
+                .setComment("org.zsz.mybatiscodegen.config.CustomCommentGenerator", commentProperties)
                 .setEntityConfig("org.zsz.gen.entity", javaPath)
                 .setDaoConfig("org.zsz.gen.dao", javaPath)
                 .setMapperConfig("mapper", xmlPath)
