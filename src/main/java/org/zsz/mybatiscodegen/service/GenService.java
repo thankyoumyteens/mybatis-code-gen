@@ -42,15 +42,20 @@ public class GenService {
      */
     public GenService setConnection(DbUsers users, GeneratorProperty... properties) {
         JDBCConnectionConfiguration config = new JDBCConnectionConfiguration();
-        String connectionURL = switch (users.getDbType()) {
-            case DbType.ORACLE ->
-                    String.format("jdbc:oracle:thin:@%s:%s:%s", users.getUsersUrl(), users.getPort(), users.getUsersDb());
-            case DbType.MYSQL ->
-                    String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&characterEncoding=utf8", users.getUsersUrl(), users.getPort(), users.getUsersDb());
-            case DbType.MARIADB ->
-                    String.format("jdbc:mariadb://%s:%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&characterEncoding=utf8", users.getUsersUrl(), users.getPort(), users.getUsersDb());
-            default -> throw new RuntimeException("数据库类型未知");
-        };
+        String connectionURL;
+        switch (users.getDbType()) {
+            case DbType.ORACLE:
+                connectionURL = String.format("jdbc:oracle:thin:@%s:%s:%s", users.getUsersUrl(), users.getPort(), users.getUsersDb());
+                break;
+            case DbType.MYSQL:
+                connectionURL = String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&characterEncoding=utf8", users.getUsersUrl(), users.getPort(), users.getUsersDb());
+                break;
+            case DbType.MARIADB:
+                connectionURL = String.format("jdbc:mariadb://%s:%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&characterEncoding=utf8", users.getUsersUrl(), users.getPort(), users.getUsersDb());
+                break;
+            default:
+                throw new RuntimeException("数据库类型未知");
+        }
         config.setConnectionURL(connectionURL);
         config.setPassword(users.getUsersPwd());
         config.setUserId(users.getUsersUid());
