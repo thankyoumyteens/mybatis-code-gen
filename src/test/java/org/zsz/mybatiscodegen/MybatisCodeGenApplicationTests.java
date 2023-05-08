@@ -2,7 +2,7 @@ package org.zsz.mybatiscodegen;
 
 import org.junit.jupiter.api.Test;
 import org.mybatis.generator.api.MyBatisGenerator;
-import org.mybatis.generator.config.*;
+import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.zsz.mybatiscodegen.entity.DbUsers;
 import org.zsz.mybatiscodegen.entity.GeneratorProperty;
+import org.zsz.mybatiscodegen.service.DbService;
 import org.zsz.mybatiscodegen.service.GenService;
 
 import java.util.ArrayList;
@@ -21,7 +22,24 @@ import java.util.List;
 class MybatisCodeGenApplicationTests {
 
     @Autowired
+    private DbService dbService;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    void genDb() throws Exception {
+        dbService.createUserDb();
+        dbService.insert(DbUsers.builder()
+                .usersUrl("127.0.1.1")
+                .usersPort("3306")
+                .usersUid("root")
+                .usersPwd("123456")
+                .usersDb("user_info")
+                .usersDriver("org.mariadb.jdbc.Driver")
+                .dbType(3)
+                .build());
+        System.out.println(dbService.selectList());
+    }
 
     @Test
     void genWithCode() throws Exception {

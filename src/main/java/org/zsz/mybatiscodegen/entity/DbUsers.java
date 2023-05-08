@@ -19,7 +19,7 @@ public class DbUsers {
 
     private Integer usersId;
     private String usersUrl;
-    private String port;
+    private String usersPort;
     private String usersUid;
     private String usersPwd;
     private String usersDb;
