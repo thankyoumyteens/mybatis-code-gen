@@ -11,8 +11,7 @@ import java.util.List;
 /**
  * @author zsz
  * @version 1.0
- * @create 2023/4/26 16:48
- * @description
+ * 实体类使用lombok注解代替getter、setter
  */
 public class LombokPlugin extends PluginAdapter {
 

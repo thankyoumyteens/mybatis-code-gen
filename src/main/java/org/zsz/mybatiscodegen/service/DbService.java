@@ -15,28 +15,27 @@ import java.util.List;
 @Component
 public class DbService {
 
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public void createUserDb() {
-        jdbcTemplate.update("DROP TABLE IF EXISTS \"db_users\";");
-        String createDbUsers = "CREATE TABLE \"db_users\" (\n" +
-                "\t\"users_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
-                "\t\"users_url\" VARCHAR(256) NOT NULL,\n" +
-                "\t\"users_port\" VARCHAR(256) NOT NULL,\n" +
-                "\t\"users_uid\" VARCHAR(256) NOT NULL,\n" +
-                "\t\"users_pwd\" VARCHAR(256) NOT NULL,\n" +
-                "\t\"users_db\" VARCHAR(256) NOT NULL,\n" +
-                "\t\"users_driver\" INTEGER NOT NULL,\n" +
-                "\t\"db_type\" VARCHAR(256) NOT NULL\n" +
+        jdbcTemplate.update("DROP TABLE IF EXISTS `db_users`;");
+        String createDbUsers = "CREATE TABLE `db_users` (" +
+                "`users_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                "`users_url` VARCHAR(256) NOT NULL," +
+                "`users_port` VARCHAR(256) NOT NULL," +
+                "`users_uid` VARCHAR(256) NOT NULL," +
+                "`users_pwd` VARCHAR(256) NOT NULL," +
+                "`users_db` VARCHAR(256) NOT NULL," +
+                "`users_driver` INTEGER NOT NULL," +
+                "`db_type` VARCHAR(256) NOT NULL" +
                 ");";
         jdbcTemplate.update(createDbUsers);
     }
 
     public void insert(DbUsers users) {
-        String insertSql = "INSERT INTO \"db_users\" (\"users_url\", \"users_port\", \"users_uid\", \"users_pwd\", \"users_db\", \"users_driver\", \"db_type\") VALUES\n" +
-                "\t(?, ?, ?, ?, ?, ?, ?);";
+        String insertSql = "insert into db_users(users_url,users_port,users_uid,users_pwd,users_db,users_driver,db_type) " +
+                "values (?,?,?,?,?,?,?);";
         jdbcTemplate.update(insertSql,
                 users.getUsersUrl(),
                 users.getUsersPort(),
@@ -45,6 +44,11 @@ public class DbService {
                 users.getUsersDb(),
                 users.getUsersDriver(),
                 users.getDbType());
+    }
+
+    public void del(int id) {
+        String delSql = "delete from db_users where users_id = ?";
+        jdbcTemplate.update(delSql, id);
     }
 
     public List<DbUsers> selectList() {

@@ -8,8 +8,6 @@ import java.sql.Types;
 /**
  * @author zsz
  * @version 1.0
- * @create 2023/4/25 15:54
- * @description
  */
 public class NumberToIntJavaTypeResolver extends JavaTypeResolverDefaultImpl {
 

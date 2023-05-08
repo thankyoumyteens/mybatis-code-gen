@@ -107,8 +107,8 @@
              -->
         <table
                 schema=""
-                tableName="A_ASE_WORK_TASKS"
-                domainObjectName="WorkTasks"
+                tableName="db_users"
+                domainObjectName="DbUsers"
                 enableCountByExample="false"
                 enableDeleteByExample="false"
                 enableSelectByExample="false"

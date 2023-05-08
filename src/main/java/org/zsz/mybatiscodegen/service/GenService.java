@@ -16,8 +16,6 @@ import java.util.List;
 /**
  * @author zsz
  * @version 1.0
- * @create 2023/4/26 15:48
- * @description
  */
 public class GenService {
 

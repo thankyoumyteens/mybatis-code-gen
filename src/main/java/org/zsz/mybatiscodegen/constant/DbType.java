@@ -3,8 +3,6 @@ package org.zsz.mybatiscodegen.constant;
 /**
  * @author zsz
  * @version 1.0
- * @create 2023/4/26 16:19
- * @description
  */
 public interface DbType {
 

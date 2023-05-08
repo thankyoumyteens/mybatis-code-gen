@@ -14,8 +14,7 @@ import java.util.Properties;
 /**
  * @author zsz
  * @version 1.0
- * @create 2023/4/26 17:27
- * @description
+ * 自定义注释
  */
 public class CustomCommentGenerator implements CommentGenerator {
     private final Properties properties;

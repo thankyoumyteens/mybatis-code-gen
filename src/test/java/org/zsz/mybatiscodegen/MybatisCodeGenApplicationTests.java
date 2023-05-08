@@ -27,7 +27,7 @@ class MybatisCodeGenApplicationTests {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void genDb() throws Exception {
+    void genDb() {
         dbService.createUserDb();
         dbService.insert(DbUsers.builder()
                 .usersUrl("127.0.1.1")
@@ -39,13 +39,15 @@ class MybatisCodeGenApplicationTests {
                 .dbType(3)
                 .build());
         System.out.println(dbService.selectList());
+        dbService.del(1);
+        System.out.println(dbService.selectList());
     }
 
     @Test
     void genWithCode() throws Exception {
 
         DbUsers users = jdbcTemplate.queryForObject("select * from db_users where users_id=?",
-                BeanPropertyRowMapper.newInstance(DbUsers.class), 3);
+                BeanPropertyRowMapper.newInstance(DbUsers.class), 1);
         if (users == null) return;
         System.out.println(users);
         String javaPath = "src/main/java";
