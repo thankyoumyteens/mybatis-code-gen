@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
-    url: jdbc:sqlite::resource:db/test.db
+    url: jdbc:sqlite:C:/Users/Public/db/test.db
 
 #spring:
 #  datasource:

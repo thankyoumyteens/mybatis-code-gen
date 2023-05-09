@@ -28,7 +28,7 @@ class MybatisCodeGenApplicationTests {
 
     @Test
     void genDb() {
-        dbService.createUserDb();
+        dbService.initUserDb();
         dbService.insert(DbUsers.builder()
                 .usersUrl("127.0.1.1")
                 .usersPort("3306")
@@ -38,8 +38,6 @@ class MybatisCodeGenApplicationTests {
                 .usersDriver("org.mariadb.jdbc.Driver")
                 .dbType(3)
                 .build());
-        System.out.println(dbService.selectList());
-        dbService.del(1);
         System.out.println(dbService.selectList());
     }
 

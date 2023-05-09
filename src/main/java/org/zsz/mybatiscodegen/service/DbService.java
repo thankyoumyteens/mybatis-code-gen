@@ -1,5 +1,6 @@
 package org.zsz.mybatiscodegen.service;
 
+import cn.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,19 +19,23 @@ public class DbService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void createUserDb() {
-        jdbcTemplate.update("DROP TABLE IF EXISTS `db_users`;");
-        String createDbUsers = "CREATE TABLE `db_users` (" +
-                "`users_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                "`users_url` VARCHAR(256) NOT NULL," +
-                "`users_port` VARCHAR(256) NOT NULL," +
-                "`users_uid` VARCHAR(256) NOT NULL," +
-                "`users_pwd` VARCHAR(256) NOT NULL," +
-                "`users_db` VARCHAR(256) NOT NULL," +
-                "`users_driver` INTEGER NOT NULL," +
-                "`db_type` VARCHAR(256) NOT NULL" +
-                ");";
-        jdbcTemplate.update(createDbUsers);
+    public void initUserDb() {
+        String query = "SELECT * FROM sqlite_master WHERE type=\"table\" AND name = \"db_users\"";
+        List<Object> dbList = jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(Object.class));
+        if (CollUtil.isEmpty(dbList)) {
+            // jdbcTemplate.update("DROP TABLE IF EXISTS `db_users`;");
+            String createDbUsers = "CREATE TABLE `db_users` (" +
+                    "`users_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "`users_url` VARCHAR(256) NOT NULL," +
+                    "`users_port` VARCHAR(256) NOT NULL," +
+                    "`users_uid` VARCHAR(256) NOT NULL," +
+                    "`users_pwd` VARCHAR(256) NOT NULL," +
+                    "`users_db` VARCHAR(256) NOT NULL," +
+                    "`users_driver` INTEGER NOT NULL," +
+                    "`db_type` VARCHAR(256) NOT NULL" +
+                    ");";
+            jdbcTemplate.update(createDbUsers);
+        }
     }
 
     public void insert(DbUsers users) {
@@ -54,5 +59,9 @@ public class DbService {
     public List<DbUsers> selectList() {
         return jdbcTemplate.query("select * from db_users",
                 BeanPropertyRowMapper.newInstance(DbUsers.class));
+    }
+
+    public <T> List<T> selectList(String sql, Class<T> mappedClass, Object... params) {
+        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(mappedClass), params);
     }
 }
