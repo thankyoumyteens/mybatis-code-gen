@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import org.zsz.mybatiscodegen.entity.DbUsers;
 import org.zsz.mybatiscodegen.service.DbService;
 
@@ -22,7 +21,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * 命令行入口
  */
-@Component
+// @Component
 public class CommandEntry implements CommandLineRunner {
 
     @Autowired
