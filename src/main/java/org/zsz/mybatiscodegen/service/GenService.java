@@ -1,5 +1,6 @@
 package org.zsz.mybatiscodegen.service;
 
+import cn.hutool.core.util.StrUtil;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.*;
 import org.mybatis.generator.exception.InvalidConfigurationException;
@@ -204,7 +205,18 @@ public class GenService {
      * @param tableName 表名
      */
     public GenService addTable(String tableName) {
-        return addTable(null, tableName, null);
+        return addTable(null, tableName, null, null, false);
+    }
+
+    /**
+     * 添加表
+     *
+     * @param tableName  表名
+     * @param primaryKey 主键列名
+     * @param isIdentity 主键是否自增
+     */
+    public GenService addTable(String tableName, String primaryKey, boolean isIdentity) {
+        return addTable(null, tableName, null, primaryKey, isIdentity);
     }
 
     /**
@@ -213,8 +225,10 @@ public class GenService {
      * @param dbName     数据库
      * @param tableName  表名
      * @param entityName 实体类名
+     * @param primaryKey 主键列名
+     * @param isIdentity 主键是否自增
      */
-    public GenService addTable(String dbName, String tableName, String entityName, GeneratorProperty... properties) {
+    public GenService addTable(String dbName, String tableName, String entityName, String primaryKey, boolean isIdentity, GeneratorProperty... properties) {
         TableConfiguration config = new TableConfiguration(context);
         if (dbName != null) {
             config.setSchema(dbName);
@@ -228,6 +242,12 @@ public class GenService {
         config.setSelectByExampleStatementEnabled(false);
         config.setUpdateByExampleStatementEnabled(false);
         config.setSelectByExampleQueryId("false");
+        config.setSelectByPrimaryKeyStatementEnabled(true);
+        config.setUpdateByPrimaryKeyStatementEnabled(true);
+        config.setDeleteByPrimaryKeyStatementEnabled(true);
+        if (StrUtil.isNotBlank(primaryKey)) {
+            config.setGeneratedKey(new GeneratedKey(primaryKey, "JDBC", isIdentity, null));
+        }
         if (properties != null) {
             for (GeneratorProperty property : properties) {
                 config.addProperty(property.getName(), property.getValue());

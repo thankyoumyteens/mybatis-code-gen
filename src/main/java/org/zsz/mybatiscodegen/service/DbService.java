@@ -1,12 +1,15 @@
 package org.zsz.mybatiscodegen.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.zsz.mybatiscodegen.entity.DbUsers;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -18,8 +21,18 @@ public class DbService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private Environment environment;
 
     public void initUserDb() {
+        String dbFileUrl = environment.getProperty("spring.datasource.url");
+        System.out.println(dbFileUrl);
+        String dbFileFolder = ReUtil.getGroup1("jdbc:sqlite:(.+)/.+\\.db", dbFileUrl);
+        File file = new File(dbFileFolder);
+        if (!file.exists()) {
+            boolean mkdirs = file.mkdirs();
+            System.out.println(mkdirs);
+        }
         String query = "SELECT * FROM sqlite_master WHERE type=\"table\" AND name = \"db_users\"";
         List<Object> dbList = jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(Object.class));
         if (CollUtil.isEmpty(dbList)) {
@@ -29,10 +42,10 @@ public class DbService {
                     "`users_url` VARCHAR(256) NOT NULL," +
                     "`users_port` VARCHAR(256) NOT NULL," +
                     "`users_uid` VARCHAR(256) NOT NULL," +
-                    "`users_pwd` VARCHAR(256) NOT NULL," +
+                    "`users_pwd` VARCHAR(256) NULL," +
                     "`users_db` VARCHAR(256) NOT NULL," +
                     "`users_driver` INTEGER NOT NULL," +
-                    "`db_type` VARCHAR(256) NOT NULL" +
+                    "`db_type` INTEGER NOT NULL" +
                     ");";
             jdbcTemplate.update(createDbUsers);
         }
@@ -63,5 +76,10 @@ public class DbService {
 
     public <T> List<T> selectList(String sql, Class<T> mappedClass, Object... params) {
         return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(mappedClass), params);
+    }
+
+    public DbUsers selectById(Integer id) {
+        return jdbcTemplate.queryForObject("select * from db_users where users_id=?",
+                BeanPropertyRowMapper.newInstance(DbUsers.class), id);
     }
 }

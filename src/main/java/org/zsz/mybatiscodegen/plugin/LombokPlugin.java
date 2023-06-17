@@ -27,11 +27,13 @@ public class LombokPlugin extends PluginAdapter {
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         // 添加实体类的 import
         topLevelClass.addImportedType("lombok.Data");
+        topLevelClass.addImportedType("lombok.Builder");
         topLevelClass.addImportedType("lombok.NoArgsConstructor");
         topLevelClass.addImportedType("lombok.AllArgsConstructor");
         topLevelClass.addImportedType("lombok.experimental.Accessors");
         // 添加实体类的 lombok 注解
         topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@Builder");
         // 生成的setter方法返回this，代替了默认的返回void
         // topLevelClass.addAnnotation("@Accessors(chain = true)");
         topLevelClass.addAnnotation("@NoArgsConstructor");
