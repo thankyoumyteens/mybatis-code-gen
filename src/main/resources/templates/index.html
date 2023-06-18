@@ -3,8 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>title</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<h1>hello html</h1>
+<button onclick="doGetList()">列表</button>
+<button onclick="doGen()">生成</button>
+
+<script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
+<script type="text/javascript">
+function doGetList() {
+    axios.get('/main/list', {
+        params: {
+        }
+    }).then(function (res) {
+        console.log(res);
+        if (res.data.code === 200) {
+            alert('成功');
+        }
+	}).catch(function (error) {
+        console.log(error);
+	});
+}
+function doGen() {
+    axios.post('/main/gen', {
+        "id": 1,
+        "tableName": "tb_tmp01",
+        "useLombok": true,
+        "useComment": true
+    }).then(function (res) {
+        console.log(res);
+        if (res.data.code === 200) {
+            alert('成功');
+        }
+	}).catch(function (error) {
+        console.log(error);
+	});
+}
+
+</script>
 </body>
 </html>
