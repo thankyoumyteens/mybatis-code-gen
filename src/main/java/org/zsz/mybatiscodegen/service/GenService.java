@@ -45,9 +45,13 @@ public class GenService {
         switch (users.getDbType()) {
             case DbType.ORACLE:
                 connectionURL = String.format("jdbc:oracle:thin:@%s:%s:%s", users.getUsersUrl(), users.getUsersPort(), users.getUsersDb());
+                // 解决获取不到字段注释的问题
+                config.addProperty("remarksReporting", "true");
                 break;
             case DbType.MYSQL:
                 connectionURL = String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&characterEncoding=utf8", users.getUsersUrl(), users.getUsersPort(), users.getUsersDb());
+                // 解决获取不到字段注释的问题
+                config.addProperty("useInformationSchema", "true");
                 break;
             case DbType.MARIADB:
                 connectionURL = String.format("jdbc:mariadb://%s:%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&characterEncoding=utf8", users.getUsersUrl(), users.getUsersPort(), users.getUsersDb());
