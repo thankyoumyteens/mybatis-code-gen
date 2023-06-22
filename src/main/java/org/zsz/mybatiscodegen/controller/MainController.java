@@ -11,6 +11,7 @@ import org.zsz.mybatiscodegen.service.MainService;
 import java.util.List;
 
 @Controller
+@CrossOrigin
 @RequestMapping("/main")
 public class MainController {
 

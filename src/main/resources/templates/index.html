@@ -6,40 +6,9 @@
     <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<button onclick="doGetList()">列表</button>
-<button onclick="doGen()">生成</button>
-
-<script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
-<script type="text/javascript">
-function doGetList() {
-    axios.get('/main/list', {
-        params: {
-        }
-    }).then(function (res) {
-        console.log(res);
-        if (res.data.code === 200) {
-            alert('成功');
-        }
-	}).catch(function (error) {
-        console.log(error);
-	});
-}
-function doGen() {
-    axios.post('/main/gen', {
-        "id": 1,
-        "tableName": "tb_tmp01",
-        "useLombok": true,
-        "useComment": true
-    }).then(function (res) {
-        console.log(res);
-        if (res.data.code === 200) {
-            alert('成功');
-        }
-	}).catch(function (error) {
-        console.log(error);
-	});
-}
-
-</script>
+<div id="app"></div>
+<script type="text/javascript" th:src="@{/js/manifest.js?7fba2c56a49fa61398f2}"></script>
+<script type="text/javascript" th:src="@{/js/vendor.js?cd9dc73d4d76ce569f72}"></script>
+<script type="text/javascript" th:src="@{/js/index.js?9e496a3d0ef2c4d0238b}"></script>
 </body>
 </html>

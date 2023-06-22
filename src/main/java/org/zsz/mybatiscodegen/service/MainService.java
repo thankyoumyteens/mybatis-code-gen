@@ -39,6 +39,8 @@ public class MainService {
         }
         if (param.getUseComment()) {
             genService.setComment("org.zsz.mybatiscodegen.config.CustomCommentGenerator", commentProperties);
+        } else {
+            genService.noComment();
         }
         genService.generateMapper();
     }

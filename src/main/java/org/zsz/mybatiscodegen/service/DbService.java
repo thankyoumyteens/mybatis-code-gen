@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.zsz.mybatiscodegen.constant.DbType;
 import org.zsz.mybatiscodegen.entity.DbUsers;
 
 import java.io.File;
@@ -52,6 +53,19 @@ public class DbService {
     }
 
     public void insert(DbUsers users) {
+        switch (users.getDbType()) {
+            case DbType.ORACLE:
+                users.setUsersDriver("oracle.jdbc.driver.OracleDriver");
+                break;
+            case DbType.MYSQL:
+                users.setUsersDriver("com.mysql.jdbc.Driver");
+                break;
+            case DbType.MARIADB:
+                users.setUsersDriver("org.mariadb.jdbc.Driver");
+                break;
+            default:
+                throw new RuntimeException("数据库类型未知");
+        }
         String insertSql = "insert into db_users(users_url,users_port,users_uid,users_pwd,users_db,users_driver,db_type) " +
                 "values (?,?,?,?,?,?,?);";
         jdbcTemplate.update(insertSql,

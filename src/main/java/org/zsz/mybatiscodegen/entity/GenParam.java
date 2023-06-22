@@ -10,7 +10,7 @@ public class GenParam {
      */
     private Integer id;
     /**
-     * 表明
+     * 表名
      */
     private String tableName;
     /**
