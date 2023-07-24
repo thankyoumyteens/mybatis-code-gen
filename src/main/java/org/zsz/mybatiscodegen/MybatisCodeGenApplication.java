@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,6 +22,8 @@ public class MybatisCodeGenApplication extends Application {
     @Override
     public void init() throws Exception {
         applicationContext = new SpringApplicationBuilder(MybatisCodeGenApplication.class)
+                // 使用javaFX时不启动web服务器
+                .web(WebApplicationType.NONE)
                 .headless(false)
                 .run();
     }
