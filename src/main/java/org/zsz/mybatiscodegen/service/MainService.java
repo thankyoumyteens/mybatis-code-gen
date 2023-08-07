@@ -19,7 +19,7 @@ public class MainService {
         String javaPath = "src/main/java";
         String xmlPath = "src/main/resources";
         GeneratorProperty[] commentProperties = {
-                new GeneratorProperty("author", "z"),
+                new GeneratorProperty("author", "zsz"),
                 new GeneratorProperty("dateFormat", "yyyy/MM/dd HH:mm")
         };
         String entityPackage = "org.zsz.gen.entity";
