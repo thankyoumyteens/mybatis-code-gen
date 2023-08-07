@@ -4,20 +4,19 @@ import cn.hutool.core.bean.BeanUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zsz.mybatiscodegen.entity.DbUsers;
 import org.zsz.mybatiscodegen.entity.DbUsersWithOptions;
+import org.zsz.mybatiscodegen.entity.GenParam;
 import org.zsz.mybatiscodegen.service.DbService;
+import org.zsz.mybatiscodegen.service.MainService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class MainWindowController {
@@ -29,6 +28,8 @@ public class MainWindowController {
 
     @Autowired
     private DbService dbService;
+    @Autowired
+    private MainService mainService;
 
     @FXML
     private void initDbList(ActionEvent event) {
@@ -36,18 +37,7 @@ public class MainWindowController {
         ObservableList<DbUsersWithOptions> data = FXCollections.observableArrayList();
         for (DbUsers dbUsers : dbUsersList) {
             DbUsersWithOptions dbUsersWithOptions = BeanUtil.copyProperties(dbUsers, DbUsersWithOptions.class);
-            Button button = new Button("生成");
-            button.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    for (DbUsersWithOptions row : data) {
-                        if (row.getOp() == button) {
-                            System.out.println(row.getUsersId());
-                            break;
-                        }
-                    }
-                }
-            });
+            Button button = getButton(data);
             dbUsersWithOptions.setOp(button);
             data.add(dbUsersWithOptions);
         }
@@ -74,6 +64,40 @@ public class MainWindowController {
         TableColumn<DbUsersWithOptions, Button> op = new TableColumn<>("操作");
         op.setCellValueFactory(new PropertyValueFactory<>("op"));
         dbList.getColumns().add(op);
-        label.setText("按钮被点击了！");
+    }
+
+    private Button getButton(ObservableList<DbUsersWithOptions> data) {
+        Button button = new Button("生成");
+        button.setOnAction(event -> {
+            for (DbUsersWithOptions row : data) {
+                if (row.getOp() == button) {
+                    Integer usersId = row.getUsersId();
+                    TextInputDialog dialog = new TextInputDialog("");
+                    dialog.setTitle("生成");
+                    dialog.setHeaderText("表名");
+                    dialog.setContentText("表名:");
+                    Optional<String> result = dialog.showAndWait();
+                    result.ifPresent(name -> {
+                        GenParam param = new GenParam();
+                        param.setId(usersId);
+                        param.setTableName(name);
+                        param.setUseLombok(true);
+                        param.setUseComment(true);
+                        try {
+                            mainService.genMybatisCode(param);
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("成功");
+                            alert.setHeaderText("成功");
+                            alert.setContentText("成功");
+                            alert.showAndWait();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    break;
+                }
+            }
+        });
+        return button;
     }
 }

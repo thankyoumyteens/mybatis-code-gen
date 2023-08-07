@@ -3,6 +3,9 @@ spring:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:C:/Users/Public/db/test.db
 
+server:
+  port: 8081
+
 #spring:
 #  datasource:
 #    driver-class-name: org.mariadb.jdbc.Driver
