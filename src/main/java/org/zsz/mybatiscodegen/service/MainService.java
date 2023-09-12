@@ -32,7 +32,7 @@ public class MainService {
                 .setDaoConfig(daoPackage, javaPath)
                 .setMapperConfig(mapperDir, xmlPath)
                 .addPlugin("org.zsz.mybatiscodegen.plugin.IfWithStringNotEmptyTestPlugin")
-                .addPlugin("org.zsz.mybatiscodegen.plugin.OverIsMergeablePlugin")
+                .addPlugin("org.zsz.mybatiscodegen.plugin.OverwriteMapperPlugin")
                 .addTable(param.getTableName(), "id", false);
         if (param.getUseLombok()) {
             genService.addPlugin("org.zsz.mybatiscodegen.plugin.LombokPlugin");
