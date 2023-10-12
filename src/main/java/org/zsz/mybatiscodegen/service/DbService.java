@@ -32,7 +32,7 @@ public class DbService {
         File file = new File(dbFileFolder);
         if (!file.exists()) {
             boolean mkdirs = file.mkdirs();
-            System.out.println(mkdirs);
+            System.out.println("created db file:" + mkdirs);
         }
         String query = "SELECT * FROM sqlite_master WHERE type=\"table\" AND name = \"db_users\"";
         List<Object> dbList = jdbcTemplate.query(query, BeanPropertyRowMapper.newInstance(Object.class));

@@ -1,11 +1,13 @@
 package org.zsz.mybatiscodegen.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.zsz.mybatiscodegen.entity.DbUsers;
 import org.zsz.mybatiscodegen.entity.GenParam;
 import org.zsz.mybatiscodegen.entity.GeneratorProperty;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -13,17 +15,30 @@ public class MainService {
 
     @Autowired
     private DbService dbService;
+    @Autowired
+    private Environment environment;
 
     public void genMybatisCode(GenParam param) throws Exception {
+        String distDir = environment.getProperty("walter.dist");
         DbUsers users = dbService.selectById(param.getId());
-        String javaPath = "src/main/java";
-        String xmlPath = "src/main/resources";
+        String javaPath = distDir + "/java";
+        String xmlPath = distDir + "/resources";
+        File javaPathFile = new File(javaPath);
+        if (!javaPathFile.exists()) {
+            boolean mkdirs = javaPathFile.mkdirs();
+            System.out.println("created javaPath dir:" + mkdirs);
+        }
+        File xmlPathFile = new File(xmlPath);
+        if (!xmlPathFile.exists()) {
+            boolean mkdirs = xmlPathFile.mkdirs();
+            System.out.println("created xmlPath dir:" + mkdirs);
+        }
         GeneratorProperty[] commentProperties = {
                 new GeneratorProperty("author", "zsz"),
                 new GeneratorProperty("dateFormat", "yyyy/MM/dd HH:mm")
         };
-        String entityPackage = "org.zsz.gen.entity";
-        String daoPackage = "org.zsz.gen.dao";
+        String entityPackage = "entity";
+        String daoPackage = "dao";
         String mapperDir = "mapper";
         GenService genService = new GenService(true)
                 .setConnection(users)
