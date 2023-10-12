@@ -1,4 +1,4 @@
-# -Dspring.profiles.active="dev"
+# -Dspring.profiles.active=dev
 spring:
   config:
     activate:
@@ -23,7 +23,7 @@ walter:
 
 ---
 
-# -Dspring.profiles.active="test"
+# -Dspring.profiles.active=test
 spring:
   config:
     activate:
