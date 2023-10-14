@@ -35,3 +35,19 @@ build/
 mapper/
 gen/
 test.db
+
+### Eclipse ###
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# Vue
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
+.idea
