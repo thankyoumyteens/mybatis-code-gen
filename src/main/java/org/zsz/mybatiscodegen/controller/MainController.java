@@ -49,6 +49,14 @@ public class MainController {
 
     @PostMapping
     @ResponseBody
+    @RequestMapping("/del")
+    public Result<String> del(@RequestBody DbUsers dbUsers) {
+        mainService.del(dbUsers);
+        return Result.success();
+    }
+
+    @PostMapping
+    @ResponseBody
     @RequestMapping("/gen")
     public Result<String> genMybatisCode(@RequestBody GenParam param) throws Exception {
         mainService.genMybatisCode(param);

@@ -71,4 +71,8 @@ public class MainService {
     public void init() {
         dbService.initUserDb();
     }
+
+    public void del(DbUsers dbUsers) {
+        dbService.del(dbUsers.getUsersId());
+    }
 }
